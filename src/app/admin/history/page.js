@@ -26,6 +26,7 @@ export default function AdminHistory() {
 
   // 1. LOAD DATA AWAL
   useEffect(() => {
+    // Cek Login di Client Side
     const isAdmin = sessionStorage.getItem('adminLoggedIn');
     if (isAdmin !== 'true') {
         router.push('/admin');
@@ -53,7 +54,7 @@ export default function AdminHistory() {
     setFilteredData(result);
   }, [filterRoom, filterMonth, filterYear, allBookings]);
 
-  // 3. INISIALISASI DATATABLES (CARA AMAN: DATA INJECTION)
+  // 3. INISIALISASI DATATABLES
   useEffect(() => {
     if (!isLoading && tableRef.current) {
         const $ = require("jquery");
@@ -71,8 +72,8 @@ export default function AdminHistory() {
         $(tableRef.current).DataTable({
             data: filteredData,
             responsive: true,
-            pageLength: 20, // <--- INI SETTING AGAR DEFAULT 20 PER HALAMAN
-            lengthMenu: [[10, 20, 50, 100, -1], [10, 20, 50, 100, "Semua"]], // Opsi dropdown pilihan
+            pageLength: 20, // Default 20 baris
+            lengthMenu: [[10, 20, 50, 100, -1], [10, 20, 50, 100, "Semua"]],
             columns: [
                 { 
                     title: "No", 
@@ -121,7 +122,7 @@ export default function AdminHistory() {
     }
   }, [filteredData, isLoading]); 
 
-  // 4. PRINT PDF
+  // 4. PRINT PDF (VERSI RAPI)
   const printPDF = () => {
     if (filteredData.length === 0) { Swal.fire('Info', 'Tidak ada data.', 'info'); return; }
 
@@ -146,14 +147,29 @@ export default function AdminHistory() {
     win.document.write(`
         <html><head><title>Cetak Laporan</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>@page{size:A4;margin:10mm} body{font-family:sans-serif;margin:20px} .table{font-size:12px}</style>
+        <style>
+            @page { size: A4; margin: 0; }
+            body { margin: 20mm; font-family: sans-serif; -webkit-print-color-adjust: exact; }
+            .table { font-size: 12px; }
+            .header-print { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        </style>
         </head><body onload="window.print();window.close();">
-        <h4 class="text-center fw-bold mb-0">LAPORAN PENGGUNAAN RUANG MEETING</h4>
-        <p class="text-center text-muted mb-4">${titleInfo}</p>
+        
+        <div class="header-print">
+            <h4 class="fw-bold mb-0">LAPORAN PENGGUNAAN RUANG MEETING</h4>
+            <p class="text-muted mb-0">${titleInfo}</p>
+        </div>
+
         <table class="table table-bordered table-sm table-striped">
-        <thead class="table-dark"><tr><th>No</th><th>Tanggal</th><th>Jam</th><th>Ruangan</th><th>Divisi/PIC</th><th>Pax</th><th>Konsumsi</th></tr></thead>
-        <tbody>${rows}</tbody></table>
-        <div class="text-end mt-5"><p>Mengetahui,<br><br><br>____________________<br>Admin GA</p></div>
+            <thead class="table-dark">
+                <tr><th>No</th><th>Tanggal</th><th>Jam</th><th>Ruangan</th><th>Divisi/PIC</th><th>Pax</th><th>Konsumsi</th></tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+
+        <div class="text-end mt-5" style="page-break-inside: avoid;">
+            <p>Mengetahui,<br><br><br>____________________<br>Admin GA</p>
+        </div>
         </body></html>
     `);
     win.document.close();
@@ -221,8 +237,8 @@ export default function AdminHistory() {
 
                 <div className="card-body p-0">
                     <div className="table-responsive p-3">
+                        {/* Tabel Kosong untuk DataTables */}
                         <table ref={tableRef} className="table table-striped table-bordered w-100" style={{width:"100%"}}>
-                            {/* Kosongkan konten, DataTables yang isi */}
                         </table>
                     </div>
                 </div>

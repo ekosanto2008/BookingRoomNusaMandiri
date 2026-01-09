@@ -24,6 +24,16 @@ export default function AdminHistory() {
 
   const tableRef = useRef(null);
 
+  // --- LOGIKA TAHUN OTOMATIS (UPDATE BARU) ---
+  const currentYear = new Date().getFullYear(); // Ambil tahun saat ini (misal: 2026)
+  const startYear = 2024; // Tahun mulai aplikasi
+  const yearList = [];
+  // Generate list tahun dari 2024 sampai tahun sekarang
+  for (let i = startYear; i <= currentYear; i++) {
+      yearList.push(i);
+  }
+  // -------------------------------------------
+
   // 1. LOAD DATA AWAL
   useEffect(() => {
     // Cek Login di Client Side
@@ -220,7 +230,10 @@ export default function AdminHistory() {
                             <label className="small fw-bold">Tahun</label>
                             <select className="form-select form-select-sm" value={filterYear} onChange={(e)=>setFilterYear(e.target.value)}>
                                 <option value="all">Semua Tahun</option>
-                                <option value="2024">2024</option><option value="2025">2025</option>
+                                {/* BAGIAN INI SUDAH DIUPDATE OTOMATIS */}
+                                {yearList.map((year) => (
+                                    <option key={year} value={year}>{year}</option>
+                                ))}
                             </select>
                         </div>
                         <div className="col-md-4">

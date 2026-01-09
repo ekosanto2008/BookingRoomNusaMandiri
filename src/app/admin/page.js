@@ -47,7 +47,7 @@ export default function AdminDashboard() {
                     setIsLoggedIn(true);
                     refreshData();
                 } else {
-                    router.push('/'); // Balik ke home jika cancel (jika diubah logicnya)
+                    window.location.href = "/"; // Balik ke home jika cancel (jika diubah logicnya)
                 }
             });
         }
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
     Swal.fire({ title: 'Reset Total?', text: 'Hapus semua data (booking & room)?', icon: 'warning', showCancelButton: true, confirmButtonText: 'RESET' }).then((r) => {
         if(r.isConfirmed) { 
             localStorage.clear(); 
-            window.location.reload(); 
+            window.location.href = "/";
         }
     });
   };

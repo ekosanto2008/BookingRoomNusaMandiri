@@ -160,8 +160,8 @@ export default function AdminDashboard() {
                         <li className="nav-item"><a className="nav-link" href="/admin/history">Laporan & Riwayat</a></li>
                     </ul>
                     <div className="d-flex gap-2">
-                        <button className="btn btn-warning btn-sm" onClick={clearAllData}>Reset Data</button>
-                        <button className="btn btn-info btn-sm text-white" onClick={generateDummyData}>+ Dummy</button>
+                        {/* <button className="btn btn-warning btn-sm" onClick={clearAllData}>Reset Data</button> */}
+                        {/* <button className="btn btn-info btn-sm text-white" onClick={generateDummyData}>+ Dummy</button> */}
                         <button className="btn btn-outline-light btn-sm" onClick={handleLogout}>Logout</button>
                     </div>
                 </div>
